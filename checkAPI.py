@@ -10,9 +10,22 @@ def check_api_key(api_key, api_secret):
         "Authorization": f"sso-key {api_key}:{api_secret}"
     }
     
-    response = requests.get(url, headers=headers)
-    print("Status Code:", response.status_code)
-    print("Response Text:", response.text)
+    try:
+        response = requests.get(url, headers=headers)
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
+        
+        if response.status_code == 403:
+            print("Access denied. Please check your API key permissions.")
+        elif response.status_code == 401:
+            print("Authentication failed. Please check your API key and secret.")
+        elif response.status_code == 200:
+            print("Authentication succeeded.")
+        else:
+            print(f"Unexpected status code: {response.status_code}")
+            
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 # Call the function to test the credentials
 check_api_key(GODADDY_API_KEY, GODADDY_API_SECRET)
